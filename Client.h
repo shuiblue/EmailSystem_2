@@ -11,8 +11,19 @@ struct client
 {
   char *name;
   NODE *outgoingBuffer;
+  NODE *addressBook;
 };
 
 void outgoing (struct client *client, struct email *msg);
 
 void incoming (struct client *client, struct email *msg);
+
+
+struct addressBookEntry
+{
+  char *alias;
+  NODE *address;
+};
+
+// TODO remove after fixing the composition-function-order-problem
+void resolveAlias (struct client *client, struct email *msg);

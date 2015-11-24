@@ -43,6 +43,13 @@ deliver (struct client *client, struct email *msg)
 void
 incoming (struct client *client, struct email *msg)
 {
+  // VERIFICATION HOOK
+  int verificationHook_isEncrypted = isEncrypted (msg);
+  printf ("incoming:\nisEncrypted = %i\nid = %i\n",
+    verificationHook_isEncrypted, msg->id);
+// VERIFICATION HOOK END
+  decrypt (client, msg);
+  
   autoRespond (client, msg);
   deliver (client, msg);
 }

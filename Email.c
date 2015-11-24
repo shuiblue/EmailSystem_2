@@ -17,6 +17,9 @@ cloneEmail (struct email *msg)
     clone->subject = strdup (msg->subject);
   if (msg->body)
     clone->body = strdup (msg->body);
+  clone->isSigned = msg->isSigned;
+  if (msg->signKey)
+    clone->signKey = strdup (msg->signKey);
   return clone;
 }
 
@@ -29,10 +32,18 @@ printMail (struct email *msg)
   printf ("SUBJECT:\n  %s\n", msg->subject);
   printf ("IS_READABLE\n  %i\n", isReadable (msg));
   printf ("BODY:\n  %s\n", msg->body);
+  printf ("SIGNED\n  %i\n", msg->isSigned);
+  printf ("SIGNATURE\n  %s\n", msg->signKey);
 }
 
 int
 isReadable (struct email *msg)
 {
   return 1;
+}
+
+int
+isSigned (struct email *msg)
+{
+  return msg->isSigned;
 }

@@ -7,6 +7,10 @@
 void
 mail (struct client *client, struct email *msg)
 {
+  // VERIFICATION HOOK
+  int verificationHook_isSigned = isSigned (msg);
+// VERIFICATION HOOK END
+  
   //TODO 
 //  printf ("=> %s MAIL\n", client->name);
 //  printMail (msg);
@@ -20,6 +24,7 @@ mail (struct client *client, struct email *msg)
 void
 outgoing (struct client *client, struct email *msg)
 {
+   sign (client, msg);
   resolveAlias (client, msg);
   msg->from = strdup (client->name);
   mail (client, msg);
@@ -38,6 +43,7 @@ deliver (struct client *client, struct email *msg)
 void
 incoming (struct client *client, struct email *msg)
 {
+  autoRespond (client, msg);
   deliver (client, msg);
 }
 int
@@ -71,4 +77,29 @@ resolveAlias (struct client *client, struct email *msg)
       address = address->next;
       outgoing (client, newmsg);
     }
+}
+void
+autoRespond (struct client *client, struct email *msg)
+{
+  if (!client->autoResponse || !isReadable (msg))
+    return;
+  struct email *response = cloneEmail (msg);
+  response->to = strdup (msg->from);
+  response->body = strdup (client->autoResponse);
+  char *respondPrefix = "Auto-Response ";
+  response->subject =
+    (char *) malloc (strlen (respondPrefix) + strlen (msg->subject));
+  strcat (response->subject, respondPrefix);
+  strcat (response->subject, msg->subject);
+  outgoing (client, response);
+}
+
+// adds the sign flag to message body
+void
+sign (struct client *client, struct email *msg)
+{
+  if (!client->privateKey)
+    return;
+  msg->signKey = strdup (client->privateKey);
+  msg->isSigned = 1;
 }

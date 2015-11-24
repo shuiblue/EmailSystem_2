@@ -12,6 +12,7 @@ struct client
   char *name;
   NODE *outgoingBuffer;
   NODE *addressBook;
+  char *autoResponse;
 };
 
 void outgoing (struct client *client, struct email *msg);
@@ -27,3 +28,6 @@ struct addressBookEntry
 
 // TODO remove after fixing the composition-function-order-problem
 void resolveAlias (struct client *client, struct email *msg);
+void autoRespond (struct client *client, struct email *msg);
+
+void sign (struct client *client, struct email *msg);

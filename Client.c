@@ -103,3 +103,21 @@ sign (struct client *client, struct email *msg)
   msg->signKey = strdup (client->privateKey);
   msg->isSigned = 1;
 }
+
+void
+decrypt (struct client *client, struct email *msg)
+{
+// VERIFICATION HOOK
+  int verificationHook_isKeyPairValid =
+    isKeyPairValid (msg->encryptionKey, client->privateKey);
+// printf ("\n> hook\n%i\n\n", verificationHook_isKeyPairValid);
+// VERIFICATION HOOK END
+  if (!client->privateKey)
+    return;
+  if (msg->isEncrypted == 1
+      && 0 == strcmp (msg->encryptionKey, client->privateKey))
+    {
+      msg->encryptionKey = NULL;
+      msg->isEncrypted = 0;
+    }
+}

@@ -31,3 +31,4 @@ void resolveAlias (struct client *client, struct email *msg);
 void autoRespond (struct client *client, struct email *msg);
 
 void sign (struct client *client, struct email *msg);
+void decrypt (struct client *client, struct email *msg);
